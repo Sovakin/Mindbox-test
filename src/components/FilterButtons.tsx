@@ -7,26 +7,33 @@ interface FilterButtonsProps {
 }
 
 const FilterButtons: React.FC<FilterButtonsProps> = ({ filter, onFilterChange }) => {
+	const buttonStyle = (isActive: boolean) => ({
+		padding: '8px 16px',
+		marginRight: '8px',
+		backgroundColor: isActive ? '#0070f3' : '#4a5568',
+		color: isActive ? 'white' : '#a0aec0',
+		borderRadius: '6px',
+		transition: 'all 0.3s ease',
+		animation: 'fadeIn 0.5s ease-out',
+	});
+
 	return (
-		<div style={{ marginBottom: '10px' }}>
+		<div style={{ marginBottom: '20px' }}>
 			<button
+				style={buttonStyle(filter === 'all')}
 				onClick={() => onFilterChange('all')}
-				disabled={filter === 'all'}
-				style={{ marginRight: '5px' }}
 			>
 				Все
 			</button>
 			<button
+				style={buttonStyle(filter === 'active')}
 				onClick={() => onFilterChange('active')}
-				disabled={filter === 'active'}
-				style={{ marginRight: '5px' }}
 			>
 				Активные
 			</button>
 			<button
+				style={buttonStyle(filter === 'completed')}
 				onClick={() => onFilterChange('completed')}
-				disabled={filter === 'completed'}
-				style={{ marginRight: '5px' }}
 			>
 				Завершенные
 			</button>

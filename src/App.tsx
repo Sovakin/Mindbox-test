@@ -9,11 +9,7 @@ import './App.css';
 function App() {
   const [todos, setTodos] = useState<Todo[]>(() => {
     const savedTodos = localStorage.getItem('todos');
-    if (savedTodos) {
-      return JSON.parse(savedTodos);
-    } else {
-      return [];
-    }
+    return savedTodos ? JSON.parse(savedTodos) : [];
   });
   const [filter, setFilter] = useState<FilterType>('all');
 
@@ -24,18 +20,16 @@ function App() {
   const addTodo = (text: string) => {
     const newTodo: Todo = {
       id: uuidv4(),
-      text: text,
+      text,
       completed: false,
     };
     setTodos([...todos, newTodo]);
   };
 
   const toggleTodo = (id: string) => {
-    setTodos(
-      todos.map(todo =>
+    setTodos(todos.map(todo =>
         todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
+    ));
   };
 
   const deleteTodo = (id: string) => {
@@ -48,34 +42,33 @@ function App() {
 
   const filteredTodos = () => {
     switch (filter) {
-      case 'active':
-        return todos.filter(todo => !todo.completed);
-      case 'completed':
-        return todos.filter(todo => todo.completed);
-      default:
-        return todos;
+      case 'active': return todos.filter(todo => !todo.completed);
+      case 'completed': return todos.filter(todo => todo.completed);
+      default: return todos;
     }
   };
 
   const incompleteTodosCount = todos.filter(todo => !todo.completed).length;
 
   return (
-    <div className="App">
-      <h1>Задачи</h1>
-      <TodoInput onAddTodo={addTodo} />
-      <FilterButtons filter={filter} onFilterChange={setFilter} />
-      <TodoList
-        todos={filteredTodos()}
-        onToggle={toggleTodo}
-        onDelete={deleteTodo}
-      />
-      <div style={{ marginTop: '10px', color: '#777' }}>
-        Осталось задач: {incompleteTodosCount}
+      <div className="App">
+        <h1>Мои задачи</h1>
+        <TodoInput onAddTodo={addTodo} />
+        <FilterButtons filter={filter} onFilterChange={setFilter} />
+        <TodoList
+            todos={filteredTodos()}
+            onToggle={toggleTodo}
+            onDelete={deleteTodo}
+        />
+        {todos.length > 0 && (
+            <div className="footer">
+              <span>Осталось задач: {incompleteTodosCount}</span>
+              <button onClick={clearCompleted}>
+                Очистить завершенные
+              </button>
+            </div>
+        )}
       </div>
-      <button onClick={clearCompleted} style={{ marginTop: '10px' }}>
-        Очистить завершенные
-      </button>
-    </div>
   );
 }
 
